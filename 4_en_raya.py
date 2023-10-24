@@ -83,57 +83,144 @@ def reiniciar_tablero(tablero):
     return tablero
 
 def puntuacion(tablero, jugador):
-    # Revisar filas
+    # Puntuación del jugador
     puntuacion = 0
-    for fila in tablero:
-        contador = 0
-        for columna in fila:
-            if columna == jugador:
-                contador += 1
-            else:
-                contador = 0
-            if contador == 2:
+
+    # Definir al oponente
+    if jugador == 1:
+        oponente = 2
+    else:
+        oponente = 1
+
+    
+    # Comprobar filas, columnas y diagonales para contar 2 en raya, 3 en raya y fichas bloqueando
+    # horizontal
+    for i in range(len(tablero)):
+        for j in range(len(tablero[0])-2):
+            if tablero[i][j] == jugador and tablero[i][j+1] == jugador and tablero[i][j+2] == jugador:
+                if j + 3 < len(tablero[0]) and tablero[i][j+3] == 0:
+                    puntuacion += 50
+                if j > 0 and tablero[i][j-1] == 0:
+                    puntuacion += 50
+            elif tablero[i][j] == jugador and tablero[i][j+1] == jugador and tablero[i][j+2] == oponente:
+                if j > 0 and tablero[i][j-1] == 0:
+                    puntuacion += 2
+            elif tablero[i][j] == jugador and tablero[i][j+1] == oponente and tablero[i][j+2] == jugador:
+                puntuacion -= 1
+            elif tablero[i][j] == jugador and tablero[i][j+1] == oponente and tablero[i][j+2] == oponente:
+                if j + 3 < len(tablero[0]) and tablero[i][j+3] == 0:
+                    puntuacion -= 2
+            elif tablero[i][j] == oponente and tablero[i][j+1] == jugador and tablero[i][j+2] == jugador:
+                if j + 3 < len(tablero[0]) and tablero[i][j+3] == 0:
+                    puntuacion += 2
+            elif tablero[i][j] == oponente and tablero[i][j+1] == jugador and tablero[i][j+2] == oponente:
                 puntuacion += 1
-            elif contador == 3:
-                puntuacion += 10
-    # Revisar columnas
-    for columna in range(len(tablero[0])):
-        contador = 0
-        for fila in range(len(tablero)):
-            if tablero[fila][columna] == jugador:
-                contador += 1
-            else:
-                contador = 0
-            if contador == 2:
+            elif tablero[i][j] == oponente and tablero[i][j+1] == oponente and tablero[i][j+2] == jugador:
+                if j > 0 and tablero[i][j-1] == 0:
+                    puntuacion -= 2
+            elif tablero[i][j] == oponente and tablero[i][j+1] == oponente and tablero[i][j+2] == oponente:
+                if j + 3 < len(tablero[0]) and tablero[i][j+3] == 0:
+                    puntuacion -= 50
+                if j > 0 and tablero[i][j-1] == 0:
+                    puntuacion -= 50
+            elif tablero[i][j] == jugador and tablero[i][j+1] == jugador and tablero[i][j+2] == 0:
                 puntuacion += 1
-            elif contador == 3:
-                puntuacion += 10
-    # Revisar diagonales
-    for fila in range(len(tablero)-3):
-        for columna in range(len(tablero[0])-3):
-            contador = 0
-            for i in range(4):
-                if tablero[fila+i][columna+i] == jugador:
-                    contador += 1
-                else:
-                    contador = 0
-                if contador == 2:
-                    puntuacion += 1
-                elif contador == 3:
-                    puntuacion += 10
-    for fila in range(len(tablero)-3):
-        for columna in range(3, len(tablero[0])):
-            contador = 0
-            for i in range(4):
-                if tablero[fila+i][columna-i] == jugador:
-                    contador += 1
-                else:
-                    contador = 0
-                if contador == 2:
-                    puntuacion += 1
-                elif contador == 3:
-                    puntuacion += 10
+            elif tablero[i][j] == 0 and tablero[i][j+1] == jugador and tablero[i][j+2] == jugador:
+                puntuacion += 1
+            elif tablero[i][j] == oponente and tablero[i][j+1] == oponente and tablero[i][j+2] == 0:
+                puntuacion -= 1
+            elif tablero[i][j] == 0 and tablero[i][j+1] == oponente and tablero[i][j+2] == oponente:
+                puntuacion -= 1
+            # 4 en raya
+            elif tablero[i][j] == jugador and tablero[i][j+1] == jugador and tablero[i][j+2] == jugador and j + 3 < len(tablero[0]) and tablero[i][j+3] == jugador:
+                puntuacion += 100
+
+    # vertical
+    for i in range(len(tablero)-2):
+        for j in range(len(tablero[0])):
+            if tablero[i][j] == jugador and tablero[i+1][j] == jugador and tablero[i+2][j] == jugador:
+                if i + 3 < len(tablero) and tablero[i+3][j] == 0:
+                    puntuacion += 50
+                if i > 0 and tablero[i-1][j] == 0:
+                    puntuacion += 50
+            elif tablero[i][j] == jugador and tablero[i+1][j] == jugador and tablero[i+2][j] == oponente:
+                if i > 0 and tablero[i-1][j] == 0:
+                    puntuacion += 2
+            elif tablero[i][j] == jugador and tablero[i+1][j] == oponente and tablero[i+2][j] == jugador:
+                puntuacion -= 1
+            elif tablero[i][j] == jugador and tablero[i+1][j] == oponente and tablero[i+2][j] == oponente:
+                if i + 3 < len(tablero) and tablero[i+3][j] == 0:
+                    puntuacion -= 2
+            elif tablero[i][j] == oponente and tablero[i+1][j] == jugador and tablero[i+2][j] == jugador:
+                if i + 3 < len(tablero) and tablero[i+3][j] == 0:
+                    puntuacion += 2
+            elif tablero[i][j] == oponente and tablero[i+1][j] == jugador and tablero[i+2][j] == oponente:
+                puntuacion += 1
+            elif tablero[i][j] == oponente and tablero[i+1][j] == oponente and tablero[i+2][j] == jugador:
+                if i > 0 and tablero[i-1][j] == 0:
+                    puntuacion -= 2
+            elif tablero[i][j] == oponente and tablero[i+1][j] == oponente and tablero[i+2][j] == oponente:
+                if i + 3 < len(tablero) and tablero[i+3][j] == 0:
+                    puntuacion -= 50
+                if i > 0 and tablero[i-1][j] == 0:
+                    puntuacion -= 50
+            elif tablero[i][j] == jugador and tablero[i+1][j] == jugador and tablero[i+2][j] == 0:
+                puntuacion += 1
+            elif tablero[i][j] == 0 and tablero[i+1][j] == jugador and tablero[i+2][j] == jugador:
+                puntuacion += 1
+            elif tablero[i][j] == oponente and tablero[i+1][j] == oponente and tablero[i+2][j] == 0:
+                puntuacion -= 1
+            elif tablero[i][j] == 0 and tablero[i+1][j] == oponente and tablero[i+2][j] == oponente:
+                puntuacion -= 1
+            # 4 en raya
+            elif tablero[i][j] == jugador and tablero[i+1][j] == jugador and tablero[i+2][j] == jugador and i + 3 < len(tablero) and tablero[i+3][j] == jugador:
+                puntuacion += 100
+
+
+
+    # diagonal
+    for i in range(len(tablero)-2):
+        for j in range(len(tablero[0])-2):
+            if tablero[i][j] == jugador and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == jugador:
+                if i + 3 < len(tablero) and j + 3 < len(tablero[0]) and tablero[i+3][j+3] == 0:
+                    puntuacion += 50
+                if i > 0 and j > 0 and tablero[i-1][j-1] == 0:
+                    puntuacion += 50
+            elif tablero[i][j] == jugador and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == oponente:
+                if i > 0 and j > 0 and tablero[i-1][j-1] == 0:
+                    puntuacion += 2
+            elif tablero[i][j] == jugador and tablero[i+1][j+1] == oponente and tablero[i+2][j+2] == jugador:
+                puntuacion -= 1
+            elif tablero[i][j] == jugador and tablero[i+1][j+1] == oponente and tablero[i+2][j+2] == oponente:
+                if i + 3 < len(tablero) and j + 3 < len(tablero[0]) and tablero[i+3][j+3] == 0:
+                    puntuacion -= 2
+            elif tablero[i][j] == oponente and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == jugador:
+                if i + 3 < len(tablero) and j + 3 < len(tablero[0]) and tablero[i+3][j+3] == 0:
+                    puntuacion += 2
+            elif tablero[i][j] == oponente and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == oponente:
+                puntuacion += 1
+            elif tablero[i][j] == oponente and tablero[i+1][j+1] == oponente and tablero[i+2][j+2] == jugador:
+                if i > 0 and j > 0 and tablero[i-1][j-1] == 0:
+                    puntuacion -= 2
+            elif tablero[i][j] == oponente and tablero[i+1][j+1] == oponente and tablero[i+2][j+2] == oponente:
+                if i + 3 < len(tablero) and j + 3 < len(tablero[0]) and tablero[i+3][j+3] == 0:
+                    puntuacion -= 50
+                if i > 0 and j > 0 and tablero[i-1][j-1] == 0:
+                    puntuacion -= 50
+            elif tablero[i][j] == jugador and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == 0:
+                puntuacion += 1
+            elif tablero[i][j] == 0 and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == jugador:
+                puntuacion += 1
+            elif tablero[i][j] == oponente and tablero[i+1][j+1] == oponente and tablero[i+2][j+2] == 0:
+                puntuacion -= 1
+            elif tablero[i][j] == 0 and tablero[i+1][j+1] == oponente and tablero[i+2][j+2] == oponente:
+                puntuacion -= 1
+            # 4 en raya
+            elif tablero[i][j] == jugador and tablero[i+1][j+1] == jugador and tablero[i+2][j+2] == jugador and i + 3 < len(tablero) and j + 3 < len(tablero[0]) and tablero[i+3][j+3] == jugador:
+                puntuacion += 100
+
     return puntuacion
+
 
 def minimax(tablero, jugador, profundidad):
     # Regresa la columna que maximiza la puntuacion
@@ -147,7 +234,7 @@ def minimax(tablero, jugador, profundidad):
         return puntuacion(tablero, jugador)
     
     if jugador == 1:
-        maximo = -100
+        maximo = -1000
         for columna in range(len(tablero[0])):
             copia_tablero = [fila[:] for fila in tablero]
             copia_tablero, valido = tirar_ficha(copia_tablero, columna, jugador)
@@ -159,7 +246,7 @@ def minimax(tablero, jugador, profundidad):
         return maximo
     
     else:
-        minimo = 100
+        minimo = 1000
         for columna in range(len(tablero[0])):
             copia_tablero = [fila[:] for fila in tablero]
             copia_tablero, valido = tirar_ficha(copia_tablero, columna, jugador)
@@ -198,25 +285,31 @@ turno = 0
 while True:
     jugador = jugadores[turno]
     print("Turno del jugador", jugador)
+    print("Puntuacion jugador:", puntuacion(tablero, jugador))
+    print("Puntuacion oponente:", puntuacion(tablero, (jugador%2)+1))
+    
     if jugador == 1:
         columna = int(input("Ingrese la columna: "))
-        tablero, valido = tirar_ficha(tablero, columna-1, jugador)
+        tablero, valido = tirar_ficha(tablero, columna, jugador)
+        while not valido:
+            columna = int(input("Ingrese la columna: "))
+            tablero, valido = tirar_ficha(tablero, columna, jugador)
     else:
+        copy_tablero = tablero.copy()
         tablero, valido = tirar_ficha_maquina(tablero, jugador)
-    if valido:
-        imprimir_tablero(tablero)
-        if revisar_ganador(tablero, jugador):
-            print("El jugador", jugador, "gano!")
-            break
-        elif revisar_empate(tablero):
-            print("Empate!")
-            break
-        turno = (turno + 1) % 2
-    else:
-        print("Columna invalida")
-        turno = (turno + 1) % 2
+        if not valido:
+            tablero = copy_tablero
+            print("No se pudo tirar la ficha")
+            continue
 
-        
+    imprimir_tablero(tablero)
+    if revisar_ganador(tablero, jugador):
+        print("El jugador", jugador, "gano")
+        break
+    if revisar_empate(tablero):
+        print("Empate")
+        break
+    turno = (turno+1)%2
 
 # Fin del programa
         
